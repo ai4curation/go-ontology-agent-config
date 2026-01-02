@@ -28,6 +28,7 @@ An obsolete term should have
 - the definition MUST be `def: "OBSOLETE. <original def>" [<original dbxrefs>]`
 - a term tracker item
 - a reason for obsoletion in the comment
+- obsolete terms SHOULD NOT have synonyms unless explicitly requested
 
 Here is an exemplar obsoleted term:
 
@@ -42,6 +43,52 @@ property_value: term_tracker_item "https://github.com/geneontology/go-ontology/i
 is_obsolete: true
 replaced_by: GO:0102772
 ```
+
+Note that the only information that remains is criticial provenance about either the history of the term (name, definition, placement via namespace), or obsoletion metadata. There are no relationships or synonym
+
+## Transferring axioms
+
+Usually when a term is obsoleted, any "good" information is typically transferred to other terms. For obsoletions with direct replacement,
+this is a straightforward transfer. For more complex cases (e.g. splits or merges, cases where the original term was ambiguous), then judgment should be applied, and in general we want to preserve where things go.
+
+For example consider a poor ontology term that is ambiguous:
+
+```
+[Term]
+id: GO:ORIGINAL1
+name: leg development
+def: "Development of a leg. A leg is an appendage on which an organism walks" [Wikipedia:Leg]
+synonym: "limb development" EXACT []
+synonym: "appendage development" EXACT []
+synonym: "development of limb" EXACT []
+is_a: ...
+```
+
+This may be obsoleted with two potential replacements:
+
+```
+[Term]
+id: GO:ORIGINAL1
+name: obsolete leg development
+def: "OBSOLETE. Development of a leg. A leg is an appendage on which an organism walks" [Wikipedia:Leg]
+
+[Term]
+id: GO:NEW1
+name: limb development
+def: "Development of a limb. A limb is a tetrapod appendange evolved from a fin." [PMID:<...>]
+synonym: "appendage development" RELATED []
+synonym: "development of limb" EXACT []
+is_a: ...
+
+[Term]
+id: GO:NEW1
+name: insect leg development
+def: "Development of an insect limb." [PMID:<...>]
+is_a: ...
+```
+
+Note the obsoleted term retains no synonyms, as these have either been transferred OR the synonym has become the primary label ("limb development"). The provenance for the original (poor) definition remains, as a matter of history.
+
 
 ## Ensure no existing terms reference the term to be obsoleted
 

@@ -59,7 +59,7 @@ But also use prior art: look for similar terms with `obo-grep.pl`
 
 ## Validation [ontology-validation agent]
 
-Ensure 
+Ensure that full validation is performed, using `cd src/ontology && make travis_test`. see ontology-validation agent for details.
 
 ## Reporting back information
 
@@ -68,11 +68,6 @@ If you are addressing a specific github issue, create fresh ISSUE_COMMENTS.md an
 If you are instructed to, then commit changes. These are generally to src/ontology/go-edit.obo. In some cases you may also need to change taxon constraint files.
 
 If you did not modify a file yourself, don't commit it. There may be modifications in files like this CLAUDE.md, this is expected, don't commit them.
-
-## Syntax Checking
-
-- To validate syntax: `robot convert --catalog src/ontology/catalog-v001.xml -i go-edit.obo -f obo -o go-edit.TMP.obo`
-- Use `-vvv` for a full stack trace if there are errors.
 
 ## Gene Ontology Guidelines
 
