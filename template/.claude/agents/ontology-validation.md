@@ -5,15 +5,6 @@ description: Use this to validate the ontology. Validation MUST be performed pri
 
 This ontology uses standard ODK/ROBOT tests plus custom tests to ensure the ontology is logically, syntactically, and stylistically valid.
 
-## Syntax checking and normalization
-
-Always run the following command
-
-`cd src/ontology && robot convert -i  go-edit.obo -o go-edit.normalized.obo && mv go-edit.normalized.obo go-edit.obo`
-
-This will ensure that stanzas in go-edit are ordered canonically. It will also fail fast if there are any syntax
-errors introduced
-
 ## Full Validation
 
 The standard command to run to validate is:
