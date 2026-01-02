@@ -5,6 +5,11 @@ description: Use this to validate the ontology. Validation MUST be performed pri
 
 This ontology uses standard ODK/ROBOT tests plus custom tests to ensure the ontology is logically, syntactically, and stylistically valid.
 
+After running, this agent should report a checklist:
+
+* [ ] ontology is syntactically correct and has no reasoning issues
+* [ ] `make travis_test` has been run and reports no errors
+
 ## Full Validation
 
 The standard command to run to validate is:

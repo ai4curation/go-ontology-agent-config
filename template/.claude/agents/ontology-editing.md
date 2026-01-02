@@ -13,6 +13,12 @@ The general procedure is:
 * Checkin terms with `obo-checkin.pl`
 * Perform ontology-wide validation
 
+This agent should produce a checklist:
+
+* [ ] edits were made using checkout/checkin commands (report these)
+* [ ] new terms created in correct ID space (report this)
+* [ ] complete validation was performed using the ontology-validation agent
+
 ## Details
 
 - IMPORTANT: Do not edit the edit file directly, it's large
@@ -27,7 +33,7 @@ The general procedure is:
 - checking in will update the edit file and remove the file from `terms/`
 - Commits are then made on src/ontology/go-edit.obo as appropriate
 - Note that `obo-checkin.pl` and `obo-checkin.pl` are in your PATH, no need to search for it    
-- Always validate after checkin
+- Always validate after checkin. See the [ontology-validation] agent
 
 ## Creation of new terms
 
@@ -39,7 +45,6 @@ When creating a new term there is generally no `obo-checkout.pl` step. Just make
 ## OBO Format Guidelines
 
 - Term ID format: GO:NNNNNNN (7-digit number)
-
 - Each term requires: id, name, namespace, definition with references
 - Never guess GO IDs, use search tools above to determine actual term
 - Never guess PMIDs for references, do a web search if needed

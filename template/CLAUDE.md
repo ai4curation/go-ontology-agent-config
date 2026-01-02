@@ -18,6 +18,8 @@ you should still consult the issue planner agent.
 
 ALWAYS create a checklist for yourself, and ALWAYS report that checklist in PR_COMMENTS.md
 
+The checklist should include both the core minimal checklist AND the checklists from any agents that were run
+
 ## Performing background research [see also: research-agent]
 
 You can do searches for literature using web search tools. For focused deep research, you can use `deep-research-client`.
