@@ -15,6 +15,9 @@ cd src/ontology && make travis_test
 
 Like all ODK tests, these are run in the same file as the ontology source. This wraps robot `reason` and other robot QC checks.
 
+To debug syntax errors, try: `cd src/ontology && robot convert -vvv -i go-edit.obo -f obo -o go-edit.TMP.obo`
+- The `-vvv` yields a full stack trace if there are errors.
+
 
 ## Logical Error Diagnosis
 
