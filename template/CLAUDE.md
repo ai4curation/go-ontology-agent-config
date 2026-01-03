@@ -43,7 +43,9 @@ Create a plan for addressing the issue. The plan MUST have the following compone
 - [ ] All references (eg PMIDs) introduced have been validated, and are relevant, and not typos or hallucinations [research-agent]
 - [ ] The metadata for the changes is correct  [metadata-checker]
 - [ ] The changes made are biologically correct and accurate [research-agent]
-- [ ] The ontology obo file has been syntax checked normalized after any edits [ontology-editing]
+* [ ] edits were made using checkout/checkin commands
+* [ ] new terms created in correct ID space
+* [ ] complete validation was performed using the ontology-validation agent
 - [ ] The ontology validates correctly using `make travis_test` after changes have been made
 - [ ] ISSUE_COMMENTS.md written; high level summary of changes, and any requests for further info
 - [ ] PR_COMMENTS.md written (if changes made); detailed description of changes made, and rationale. Include checklists. [this agent]
@@ -91,13 +93,56 @@ Troubleshooting: if you can't find `go-edit.obo` it likely means you have change
 
 See [external-term-lookup] agent if you need to find non-GO terms.
 
-## Making edits [see also: ontology-editing agent]
+## Making edits
 
-Always invoke the ontology-editing agent to make edits
+The source file for this ontology is `src/ontology/go-edit.obo`. Generally editing should follow a "checkin" and "checkout" procedure (note: NOT the same as git checkin/out) to facilitate working with small term-specific files, rather than a megafile which is hard to fit into context.
 
-Use `obo-checkout.pl` and `obo-checkin.pl` to create tractable editable modules in the `terms` folder.
+The general procedure is:
 
-It's always a good idea to look at the structure of existing similar terms, these can be found with `obo-grep.pl`
+* Find relevant terms with `obo-grep.pl`
+* Checkout terms with `obo-checkout.pl`
+* Make edits in terms/
+* Checkin terms with `obo-checkin.pl`
+* Perform ontology-wide validation
+
+- IMPORTANT: Do not edit the edit file directly, it's large
+- Add edits should be made in the `terms/` folder
+- check out a term into `terms/`: `obo-checkout.pl src/ontology/go-edit.obo GO:1234567 [OTHER IDS]`
+- This will create a single stanza obo files `terms/go_1234567.obo` which you can easily edit
+     - (note the colon is replaced with an underscore)
+- You can go ahead and edit the smallers files in the `terms/` folder
+- After edits, check back in: `obo-checkin.pl src/ontology/go-edit.obo GO:1234567 [OTHER IDS]`
+- if you like you can edit multiple terms in one batch, e.g. `terms/my_batch.obo`
+     - `obo-checkout.pl src/ontology/go-edit.obo terms/my_batch.obo`
+     - <make edits to terms/my_batch.obo>
+     - `obo-checkin.pl src/ontology/go-edit.obo terms/my_batch.obo`
+- checking in will update the edit file and remove the file from `terms/`
+- Commits are then made on src/ontology/go-edit.obo as appropriate
+- Note that `obo-checkout.pl` and `obo-checkin.pl` are in your PATH, no need to search for it    
+- Always validate after checkin. See the [ontology-validation] agent
+
+### Creation of new terms
+
+Always follow this procedure:
+
+* Work on new terms in a file in the top level `terms/` folder
+* New terms start  GO:777xxxx
+   - Do do `grep id: GO:777 src/ontology/go-edit.obo` to check for clashes (in ids and alt_ids)
+   - Make a file `terms/GO_777xxxx.obo` with a fresh stanza
+* Place this in the edit file with `obo-checkin.pl src/ontology/go-edit.obo terms/GO_777xxxx.obo`
+
+Please do not try and place new terms in the edit file directly as they may end up in the wrong place.
+
+### OBO Format Guidelines
+
+- Term ID format: GO:NNNNNNN (7-digit number)
+- Each term requires: id, name, namespace, definition with references
+- Never guess GO IDs, use search tools above to determine actual term
+- Never guess PMIDs for references, do a web search if needed
+- Use standard relationship types: is_a, part_of, has_part, etc.
+- Follow existing term patterns for consistency
+
+Tip: It's always a good idea to look at the structure of existing similar terms, these can be found with `obo-grep.pl`
 
 ## Ensure correct metadata [see also: metadata-checker] agent
 
