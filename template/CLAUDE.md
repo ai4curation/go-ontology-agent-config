@@ -142,9 +142,42 @@ The reasoner can find the most specific `is_a`, so it's OK to leave this off.
         - `never_in_taxon.tsv`
         - `only_in_taxon.tsv`
 
-## ALWAYS perform validation [ontology-validation agent]
+## ALWAYS perform validation
 
-Ensure that full validation is performed, using `cd src/ontology && make travis_test`. see ontology-validation agent for details.
+Ensure that full validation is performed, using `cd src/ontology && make travis_test`.
+
+This ontology uses standard ODK/ROBOT tests plus custom tests to ensure the ontology is logically, syntactically, and stylistically valid.
+
+After running, this agent should report a checklist:
+
+* [ ] ontology is syntactically correct and has no reasoning issues
+* [ ] `make travis_test` has been run and reports no errors
+
+## Full Validation
+
+The standard command to run to validate is:
+
+```
+cd src/ontology && make travis_test
+```
+
+Like all ODK tests, these are run in the same file as the ontology source. This wraps robot `reason` and other robot QC checks.
+
+To debug syntax errors, try: `cd src/ontology && robot convert -vvv -i go-edit.obo -f obo -o go-edit.TMP.obo`
+- The `-vvv` yields a full stack trace if there are errors.
+
+
+## Logical Error Diagnosis
+
+- Execute `cd src/ontology && robot explain --input go-edit.obo --output go-edit.entailed.obo` to find entailed axioms
+- Use `cd src/ontology && robot explain --input go-edit.obo --reasoner ELK  -M unsatisfiability --unsatisfiable all explanations.md` to generate a report explaining unsat classes
+- Analyze intersection_of axioms, is_a relationships, and logical definitions for conflicts
+- Identify problematic axioms causing reasoning failures
+- never use DL reasoners such as hermit for the full ontology, it is too large -- and unneccessary as we only have EL axioms, so ELK is sufficient (ELK is the default)
+
+## Reference Validation
+
+The standard validation pipeline does NOT cover reference validation. For this you must use your own judgment and use the research-agent.
 
 ## Reporting back information
 
@@ -153,5 +186,3 @@ If you are addressing a specific github issue, create fresh ISSUE_COMMENTS.md an
 If you are instructed to, then commit changes. These are generally to src/ontology/go-edit.obo. In some cases you may also need to change taxon constraint files.
 
 If you did not modify a file yourself, don't commit it. There may be modifications in files like this CLAUDE.md, this is expected, don't commit them.
-
-
