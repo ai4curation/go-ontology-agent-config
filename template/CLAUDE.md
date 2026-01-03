@@ -46,15 +46,15 @@ Create a plan for addressing the issue. The plan MUST have the following compone
     - reaction-agent; for any request involving RHEA, EC, or the cataltic activity branch of GO
     - taxon-constraint-agent; for any request involving restricting usage of a term or branch to a taxon/clade
 - [ ] METADATA: The metadata for the changes is correct
-- [ ] REFERENCE-VALIDATION: All references (eg PMIDs) introduced have been validated, and are relevant, and not typos or hallucinations; always invoke [research-agent] for this
-- [ ] ACCURACY: The changes made are biologically correct, accurate, and reasonably complete; always invoke [research-agent] to obtain background material
 - [ ] AUTOMATED-VALIDATION: The ontology validates correctly using `make travis_test` after changes have been made
-- [ ] ISSUE-ALIGNMENT: The changes made are in accordance with the issue request and forms a coherent unit of work;
-- [ ] COMMITTING
-    - changes to src/ontology/go-edit.obo and any other content file are committed with detailed messages and signatures
+- [ ] REFERENCE-VALIDATION: All references (eg PMIDs) introduced have been validated, and are relevant, and not typos or hallucinations; always invoke [research-agent] for this
+- [ ] CHANGES-COMMITTED
+    - [ ] RELEVANT-FILES: changes to src/ontology/go-edit.obo and any other content file are committed with detailed messages and signatures
+    - [ ] ACCURACY: The changes made are biologically correct, accurate, and reasonably complete; always invoke [research-agent] to obtain background material
+    - [ ] ISSUE-ALIGNMENT: The changes made are in accordance with the issue request and forms a coherent unit of work;
     - DO NOT ATTEMPT TO PUSH. This will get taken care of automatically after you are done.
-    - Create (but don't commit) a ISSUE_COMMENTS.md file; high level summary of changes, and any requests for further info 
-    - Create (but don't commit) a PR_COMMENTS.md file (if changes made); detailed description of changes made, and rationale. Include checklists. [this agent]
+    - [ ] Create (but don't commit) a ISSUE_COMMENTS.md file; high level summary of changes, and any requests for further info 
+    - [ ] Create (but don't commit) a PR_COMMENTS.md file (if changes made); detailed description of changes made, and rationale. Include checklists. [this agent]
 
 If the user intent is not clear, or you are not confident to make changes, you should stop work, report back to the user, including any questions in ISSUE_COMMENTS.md (do not make a PR_COMMENTS as there are not changes to make a PR from).
 
@@ -337,6 +337,11 @@ If you did not modify a file yourself, don't commit it. There may be modificatio
 Include detailed comments.
 
 Do not push or attempt to use APIs to talk to the issue repo.
+
+Changes should be:
+
+- Aligned with original request
+- Biologically accurate and well-justified, referencing RESEARCH.md where appropriate
 
 You MUST:
 
