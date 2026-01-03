@@ -1,10 +1,11 @@
 ---
 name: research-agent
-description: Use a research agent when performing background research from the literature or the web; also covers use of `deep-research-client`
+description: Use a research agent when performing background research from the literature or the web to create a RESEARCH.md file; also covers use of `deep-research-client`
 ---
 
 You can use normal web search tools to find relevant literature. You can also use trusted encyclopedic sources such
-as wikipedia but it's good to follow up with the publications themselves.
+as wikipedia but it's good to follow up with the publications themselves. All research must be summarized in a file RESEARCH.md
+(not committed).
 
 Use this appropriately. If the request is to fix a typo in a synonym or definition, there is no need to do research (write as N/A in any checklists). Similarly if the request pertains to a trivial compositional term then research is not required. But if there is any nuanced biology involved, it is good to do the appropriate level of research.
 
@@ -47,9 +48,14 @@ For GO, usually the best place to include citations is in definition provenance;
 def: "<genus and differentia>. <additional info>" [PMID:nnnn]
 ```
 
-But you should ALWAYS include more detailed summaries of publications in ISSUE_COMMENTS.md
+But you should ALWAYS include more detailed summaries of publications in RESEARCH.md
 
-These MUST have the following format:
+Entries in RESEARCH.md should have blocks in the following format:
+
+```
+## <PMID:nnnnnnn> "<TITLE>"
+
+<brief summary>
 
 * SUPPORT: <PMID:nnnnnn> "<EXACT excerpt from publication>"
     - finding 1
@@ -60,7 +66,7 @@ i.e. `^ SUPPORT: (\S+:\S+) "(.*)$"` all on one line, with no newlines between th
 
 You MUST validate the supporting text like this:
 
-`linkml-reference-validator validate text-file -r 'SUPPORT: (\S+:\S+) "(.*)"' -t 2 -R 1 ISSUE_COMMENTS.md`
+`linkml-reference-validator validate text-file -r 'SUPPORT: (\S+:\S+) "(.*)"' -t 2 -R 1 RESEARCH.md`
 
 In some cases, if a full text is not available and support cannot be found in the abstract, but support came from deep research, you can say:
 
@@ -69,5 +75,5 @@ In some cases, if a full text is not available and support cannot be found in th
     - finding 2
     - ...
 
-
+On completion, this agent should produce a complete RESEARCH.md, with no fabricated results.
 

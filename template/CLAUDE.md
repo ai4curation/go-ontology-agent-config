@@ -25,7 +25,7 @@ The project follows standard ODK layout:
 These instructions are optimized for claude code. Subagents are used, and defined
 in `.claude/agents/`
 
-## Analyze Issue, Plan Approach, and create a TODO/checklist
+## PLAN: Analyze Issue, Plan Approach, and create a TODO/checklist
 
 Read the entire issue and all associated comments. Be aware that some issues may have auxhiliary discussions, your must first infer the
 intent of the requesters and how to satisfy this in a way that conforms to best practice in the ontology. If the user intent from the
@@ -33,44 +33,52 @@ issue is hopelessly ambiguous, then write a note asking for clarification in a n
 
 Create a plan for addressing the issue. The plan MUST have the following components (you can have more components depending on the nature of the issue)
 
-- [ ] Current state of the ontology validates prior to any changes (if not, we can't validate our changes)
-- [ ] The issue and all its context has been analyzed, the intent is clear, and a plan for addressing it has been created
-- [ ] If appropriate, necessary background research performed, using [research-agent]
-- [ ] Relevant ontology terms (this ontology or others) have been consulted [ontology-term-search]
-- [ ] Existing terms and documentation consulted 
-- [ ] The changes made are in accordance with the issue request and forms a coherent unit of work [ontology-editing]
-- [ ] The changes made are conformant with the best practice for this ontology 
-- [ ] All references (eg PMIDs) introduced have been validated, and are relevant, and not typos or hallucinations [research-agent]
-- [ ] The metadata for the changes is correct  [metadata-checker]
-- [ ] The changes made are biologically correct and accurate [research-agent]
-* [ ] edits were made using checkout/checkin commands
-* [ ] new terms created in correct ID space
-* [ ] complete validation was performed using the ontology-validation agent
-- [ ] The ontology validates correctly using `make travis_test` after changes have been made
-- [ ] ISSUE_COMMENTS.md written; high level summary of changes, and any requests for further info
-- [ ] PR_COMMENTS.md written (if changes made); detailed description of changes made, and rationale. Include checklists. [this agent]
+- [ ] PLAN: The issue and all its context has been analyzed, the intent is clear, and a plan for addressing it has been created
+- [ ] PRE-VALIDATION: Current state of the ontology validates prior to any changes (if not, we can't validate our changes)
+- [ ] RESEARCH: If appropriate, necessary background research performed; always invoke [research-agent] for this, it produces a RESEARCH.md file
+- [ ] TERM-SEARCH: Relevant ontology terms (this ontology or others) have been consulted
+- [ ] DESIGN-PATTERNS: Existing design patterms, terms, and documentation consulted; always invoke [design-pattern-agent] for this
+- [ ] EDITS: correct procedure is followed for making edits, using checkin/checkout commands, and local `./terms/ folder
+- [ ] RELATIONSHIPS: appropriate relationships and logical axioms are included
+- [ ] SPECIALIZED-EDITS: include checklists from the following subagents as appropriate, depending on the nature of the request
+    - term-obsoletion agent; MUST be invoked for anything involving obsoletion/deprecation of terms
+    - chemical-entity-agent; for any request involving CHEBI or chemical terms or nomenclature
+    - reaction-agent; for any request involving RHEA, EC, or the cataltic activity branch of GO
+    - taxon-constraint-agent; for any request involving restricting usage of a term or branch to a taxon/clade
+- [ ] METADATA: The metadata for the changes is correct
+- [ ] REFERENCE-VALIDATION: All references (eg PMIDs) introduced have been validated, and are relevant, and not typos or hallucinations; always invoke [research-agent] for this
+- [ ] ACCURACY: The changes made are biologically correct, accurate, and reasonably complete; always invoke [research-agent] to obtain background material
+- [ ] AUTOMATED-VALIDATION: The ontology validates correctly using `make travis_test` after changes have been made
+- [ ] ISSUE-ALIGNMENT: The changes made are in accordance with the issue request and forms a coherent unit of work;
+- [ ] COMMITTING
+    - changes to src/ontology/go-edit.obo and any other content file are committed with detailed messages and signatures
+    - DO NOT ATTEMPT TO PUSH. This will get taken care of automatically after you are done.
+    - Create (but don't commit) a ISSUE_COMMENTS.md file; high level summary of changes, and any requests for further info 
+    - Create (but don't commit) a PR_COMMENTS.md file (if changes made); detailed description of changes made, and rationale. Include checklists. [this agent]
 
-You MUST use the subagent defined in square brackets above for each of these.
+If the user intent is not clear, or you are not confident to make changes, you should stop work, report back to the user, including any questions in ISSUE_COMMENTS.md (do not make a PR_COMMENTS as there are not changes to make a PR from).
 
-## What to do if the ontology is invalid BEFORE you commence work.
+Otherwise, if you proceed to making and committing changes, then you should ensure you have written BOTH ISSUE_COMMENTS *and* PR_COMMENTS. Include the checklist in PR_COMMENTS.md. Everything should be checked or marked N/A.
 
-if there is a minor fix, go ahead and make it. Otherwise you should
-not make edits, and end after creating an ISSUE_COMMENTS.md file with
+### PRE-VALIDATION: What to do if the ontology is invalid BEFORE you commence work.
+
+In general you should ONLY make changes in scope of the issue. However, if validation fails
+BEFORE you start work, and this requires a minor fix, go ahead and make it.
+
+Otherwise you should not make edits, and end after creating an ISSUE_COMMENTS.md file with
 a detailed description of what is invalid, and a plan for how to fix things.
 
-## Specific subagents for specific tasks
-
-- For any request to obsolete a term, use the term-obsoletion agent
-- For any request involving mappings or term xrefs, use the term-mapping agent
-- For any task involving signifcant ontology content, use the design-patterns agent
-
-## Performing background research [see also: research-agent]
+## RESEARCH [see also: research-agent]
 
 You can do searches for literature using web search tools. For focused deep research, you can use `deep-research-client`.
 
 Use PMIDs where possible, and ALWAYS check that these PMIDs are the correct ones, and not typos or hallucinated.
 
-## Search and lookup of GO terms
+Never fabricate PMIDs or other reference IDs, always use the research-agent to produce a RESEARCH.md file which you can copy from.
+
+## TERM-SEARCH: Search and lookup of GO terms
+
+You should always find relevant terms in the ontology before starting work.
 
 The recommended way to find terms in `src/ontology/go-edit.obo` is using `obo-grep.pl`
 
@@ -89,11 +97,16 @@ The recommended way to find terms in `src/ontology/go-edit.obo` is using `obo-gr
 
 Troubleshooting: if you can't find `go-edit.obo` it likely means you have changed folder, navigate back up to where the repo is checked out
 
-## Searching terms in other ontologies
+### Searching terms in other ontologies
 
 See [external-term-lookup] agent if you need to find non-GO terms.
 
-## Making edits
+## DESIGN-PATTERNS: consult documented patterns for categories of ontology terms
+
+This ontology includes many design patterns for different categories of term. If your plan involves making non-trivial edits then
+you must use the *design-pattern-agent* to research what design patterns exist for terms to be edited.
+
+### EDITS: creating changes to be checked into the edit obo file
 
 The source file for this ontology is `src/ontology/go-edit.obo`. Generally editing should follow a "checkin" and "checkout" procedure (note: NOT the same as git checkin/out) to facilitate working with small term-specific files, rather than a megafile which is hard to fit into context.
 
@@ -144,7 +157,36 @@ Please do not try and place new terms in the edit file directly as they may end 
 
 Tip: It's always a good idea to look at the structure of existing similar terms, these can be found with `obo-grep.pl`
 
-## Ensure correct metadata [see also: metadata-checker] agent
+## RELATIONSHIPS: logical axioms and conforming to design patterns
+
+All terms should have at least one `is_a` (this can be implicit by a logical definition, see below).
+It's common for BP and CC terms to have a `part_of` relationship.
+
+Logical definitions should be included if the term is compositional in nature, and there is a design pattern. Logical definitions
+ should follow genus-differentia form, and the text definition should mirror the logical definition. Example:
+
+```
+[Term]
+id: GO:0001649
+name: osteoblast differentiation
+namespace: biological_process
+def: "The process whereby a relatively unspecialized cell acquires the specialized features of an osteoblast, a mesodermal or neural crest cell that gives rise to bone." [CL:0000062]
+synonym: "osteoblast cell differentiation" EXACT []
+intersection_of: GO:0030154 ! cell differentiation
+intersection_of: results_in_acquisition_of_features_of CL:0000062 ! osteoblast
+relationship: part_of GO:0001503 ! ossification
+```
+
+Here the genus is `cell differentiation` and the differentia points to a CL term. Never guess these IDs, use tools to find them.
+Never guess the pattern or relationships. Consult the design pattern docs or look for similar terms (e.g. other differentiation terms).
+
+The reasoner can find the most specific `is_a`, so it's OK to leave this off.
+
+Always make sure that design patterns are conformed to, especially for compositional terms. Use the [design-pattern] agent to check for conformance of name, def and logical def.
+
+But also use prior art: look for similar terms with `obo-grep.pl`
+
+## METADATA
 
 - ALWAYS include created_by and creation_date for terms YOU CREATE
 - NEVER add or modify these properties if you are simply editing an existing term
@@ -171,8 +213,6 @@ creation_date: 2024-01-26T22:35:49Z
 ```
 
 Note the definition include provenances from two publications. One of the 3 GO namespaces are selected. The synonyms lack axiom-level provenance but this is acceptable for GO. Synonyms with appropriate scopes are present. There is a link to the term tracker that discusses or requests this term. There is provenance about the creation of the term.
-
---
 
 When checking metadata on terms, you will:
 
@@ -204,7 +244,7 @@ Similarly
 
 3. **Definition Source**: when adding or updating definitions
    - If an ORCID is provided by the user, and that ORCID is a person that contributed to the definition, include in definition provenance
-   - Include any necessary PMIDs, but ensure these are validated (use the research-agent)
+   - Include any necessary PMIDs, but ensure these are validated; these should be taken from REFERENCES.md (produced by the research agent)
 
 Example:
 
@@ -235,36 +275,7 @@ property_value: term_tracker_item "https://github.com/geneontology/go-ontology/i
 ```
 
 
-
-## Relationships, Logical Definitions, and Design patterns
-
-Always make sure that design patterns are conformed to, especially for compositional terms. Use the [design-pattern] agent to check for conformance of name, def and logical def.
-
-But also use prior art: look for similar terms with `obo-grep.pl`
-
-All terms should have at least one `is_a` (this can be implicit by a logical definition, see below).
-It's common for BP and CC terms to have a `part_of` relationship.
-
-Logical definitions should follow genus-differentia form, and the text definition should mirror the logical definition. Example:
-
-```
-[Term]
-id: GO:0001649
-name: osteoblast differentiation
-namespace: biological_process
-def: "The process whereby a relatively unspecialized cell acquires the specialized features of an osteoblast, a mesodermal or neural crest cell that gives rise to bone." [CL:0000062]
-synonym: "osteoblast cell differentiation" EXACT []
-intersection_of: GO:0030154 ! cell differentiation
-intersection_of: results_in_acquisition_of_features_of CL:0000062 ! osteoblast
-relationship: part_of GO:0001503 ! ossification
-```
-
-Here the genus is `cell differentiation` and the differentia points to a CL term. Never guess these IDs, use tools to find them.
-Never guess the pattern or relationships. Consult the design pattern docs or look for similar terms (e.g. other differentiation terms).
-
-The reasoner can find the most specific `is_a`, so it's OK to leave this off.
-
-## Special cases
+## SPECIALIZED-EDITS: appropriate subagents should be used for special cases
 
 - term obsoletions, invoke the [term-obsoletion] agent
     - ensure no references (in ontology or annotations) to obsolete terms; rewire if necessary
@@ -283,18 +294,13 @@ The reasoner can find the most specific `is_a`, so it's OK to leave this off.
         - `never_in_taxon.tsv`
         - `only_in_taxon.tsv`
 
-## ALWAYS perform validation
+## AUTOMATED-VALIDATION using Makefile
 
-Ensure that full validation is performed, using `cd src/ontology && make travis_test`.
+Ensure that full validation is performed, using `cd src/ontology && make travis_test` (being sure you are in the right folder)
 
 This ontology uses standard ODK/ROBOT tests plus custom tests to ensure the ontology is logically, syntactically, and stylistically valid.
 
-After running, this agent should report a checklist:
-
-* [ ] ontology is syntactically correct and has no reasoning issues
-* [ ] `make travis_test` has been run and reports no errors
-
-## Full Validation
+### Full Validation
 
 The standard command to run to validate is:
 
@@ -308,7 +314,7 @@ To debug syntax errors, try: `cd src/ontology && robot convert -vvv -i go-edit.o
 - The `-vvv` yields a full stack trace if there are errors.
 
 
-## Logical Error Diagnosis
+### Logical Error Diagnosis
 
 - Execute `cd src/ontology && robot explain --input go-edit.obo --output go-edit.entailed.obo` to find entailed axioms
 - Use `cd src/ontology && robot explain --input go-edit.obo --reasoner ELK  -M unsatisfiability --unsatisfiable all explanations.md` to generate a report explaining unsat classes
@@ -316,14 +322,31 @@ To debug syntax errors, try: `cd src/ontology && robot convert -vvv -i go-edit.o
 - Identify problematic axioms causing reasoning failures
 - never use DL reasoners such as hermit for the full ontology, it is too large -- and unneccessary as we only have EL axioms, so ELK is sufficient (ELK is the default)
 
-## Reference Validation
+## REFERENCE-VALIDATION
 
-The standard validation pipeline does NOT cover reference validation. For this you must use your own judgment and use the research-agent.
+Ensure that any references introduced came from the RESEARCH.md file created by the research-agent.
 
-## Reporting back information
+RESEARCH.md can be included in ISSUE_COMMENTS.md verbatim (but you can exclude references that turned out to be irrelevant)
 
-If you are addressing a specific github issue, create fresh ISSUE_COMMENTS.md and PR_COMMENTS.md files.
+## COMMITTING
 
-If you are instructed to, then commit changes. These are generally to src/ontology/go-edit.obo. In some cases you may also need to change taxon constraint files.
-
+Commit only the files YOU edited. These are generally to src/ontology/go-edit.obo.
+In some cases you may also need to change taxon constraint files or other ancilliary content files.
 If you did not modify a file yourself, don't commit it. There may be modifications in files like this CLAUDE.md, this is expected, don't commit them.
+
+Include detailed comments.
+
+Do not push or attempt to use APIs to talk to the issue repo.
+
+You MUST:
+
+- create a ISSUE_COMMENTS.md file which I will use to feed back comments to the user making the request
+   - include background material, including RESEARCH.md if relevant
+   - include a high level biologist-friendly summary of your changes. Include justifications
+   - Don't include in-the-weed technical details here, these can go in PR_COMMENTS
+   - You can include any questions you might have for the original user here
+- create a PR_COMMENTS.md file
+   - include the complete checklist here
+   - include any detailed technical details here
+   - This is for the attention of the reviewer of the PR, so more details are appropriate here
+
