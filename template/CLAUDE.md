@@ -132,7 +132,7 @@ The general procedure is:
 - checking in will update the edit file and remove the file from `terms/`
 - Commits are then made on src/ontology/go-edit.obo as appropriate
 - Note that `obo-checkout.pl` and `obo-checkin.pl` are in your PATH, no need to search for it    
-- Always validate after checkin. See the [ontology-validation] agent
+- Always validate after checkin via `cd src/ontology && make travis_test`
 
 ### Creation of new terms
 
@@ -297,6 +297,8 @@ property_value: term_tracker_item "https://github.com/geneontology/go-ontology/i
 ## AUTOMATED-VALIDATION using Makefile
 
 Ensure that full validation is performed, using `cd src/ontology && make travis_test` (being sure you are in the right folder)
+
+Allow ~5 mins for travis_test to run
 
 This ontology uses standard ODK/ROBOT tests plus custom tests to ensure the ontology is logically, syntactically, and stylistically valid.
 
