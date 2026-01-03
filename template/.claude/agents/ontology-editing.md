@@ -30,9 +30,11 @@ This agent should produce a checklist:
 - After edits, check back in: `obo-checkin.pl src/ontology/go-edit.obo GO:1234567 [OTHER IDS]`
 - if you like you can edit multiple terms in one batch, e.g. `terms/my_batch.obo`
      - `obo-checkout.pl src/ontology/go-edit.obo terms/my_batch.obo`
+     - <make edits to terms/my_batch.obo>
+     - `obo-checkin.pl src/ontology/go-edit.obo terms/my_batch.obo`
 - checking in will update the edit file and remove the file from `terms/`
 - Commits are then made on src/ontology/go-edit.obo as appropriate
-- Note that `obo-checkin.pl` and `obo-checkin.pl` are in your PATH, no need to search for it    
+- Note that `obo-checkout.pl` and `obo-checkin.pl` are in your PATH, no need to search for it    
 - Always validate after checkin. See the [ontology-validation] agent
 
 ## Creation of new terms

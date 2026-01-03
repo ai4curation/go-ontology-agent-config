@@ -1,17 +1,31 @@
 # GO Ontology Project Guide
 
-This includes instructions for editing the go ontology. 
+This includes instructions for editing the go ontology and related files in response to GitHub issues.
 
 ## Project Layout
 
-- follows standard ODK layout
-- Main development file is `src/ontology/go-edit.obo` with `Makefile` in same directory
-- individual terms checked out in `terms`
+The project follows standard ODK layout:
+
+ * src
+    * ontology/
+       * go-edit.obo
+       * Makefile
+       * ...
+    * taxon_constraints/
+       * only_in_taxon.tsv
+       * never_in_taxon.tsv
+ * terms/   ## checked out copies, for editing
+    * GO_NNNNNNN.obo # checked out local copy
+ * .claude/
+    * agents/   ## specific agent instructions    
+
+ For make targets, a standard pattern is `cd src/ontology && make <TARGET>`. Beware of accidentally changing to the `src/ontology`
+ dir and forgetting where you are. It is best to run things from the top level
 
 These instructions are optimized for claude code. Subagents are used, and defined
-in .claude/agents/
+in `.claude/agents/`
 
-## Create a plan for any changes to be made [see also: issue-planner agent]
+## ALWAYS create a plan for any changes to be made [see also: issue-planner agent]
 
 ALWAYS use the issue-planner agent when you are resolving github issues. When resolving issues directly from the user,
 you should still consult the issue planner agent.
@@ -39,96 +53,30 @@ You can search over `src/ontology/go-edit.obo` using `obo-grep.pl` (in your path
 
 ## Making edits [see also: ontology-editing agent]
 
+Always invoke the ontology-editing agent to make edits
+
 Use `obo-checkout.pl` and `obo-checkin.pl` to create tractable editable modules in the `terms` folder.
 
 It's always a good idea to look at the structure of existing similar terms, these can be found with `obo-grep.pl`
 
-## Design patterns
+## Ensure correct metadata [see also: metadata-checker] agent
+
+- ALWAYS include created_by and creation_date for terms YOU CREATE
+- NEVER add or modify these properties if you are simply editing an existing term
+- Unlike other obo ontologies, there is always a `namespace:` tag in GO (including on obsolete terms)
+- Link back to the issue you are dealing with using the `term_tracker_item`
+- All terms should have definitions, with at least one definition xref, ideally a PMID
+
+## Relationships, Logical Definitions, and Design patterns
 
 Always make sure that design patterns are conformed to, especially for compositional terms. Use the [design-pattern] agent to check for conformance of name, def and logical def.
 
 But also use prior art: look for similar terms with `obo-grep.pl`
 
-## Special cases
-
-- term obsoletions, invoke the [term-obsoletion] agent
-    - ensure no references (in ontology or annotations) to obsolete terms
-    - follow metadata conventions
-- anything involving CHEBI/chemical entities, invoke the [chemical-entity-agent]
-    - use ph7.3 forms
-- mappings, invoke the [mapping-agent] agent
-    - for always provide the skos predicate on a mapping when you can
-
-## Validation [ontology-validation agent]
-
-Ensure that full validation is performed, using `cd src/ontology && make travis_test`. see ontology-validation agent for details.
-
-## Reporting back information
-
-If you are addressing a specific github issue, create fresh ISSUE_COMMENTS.md and PR_COMMENTS.md files.
-
-If you are instructed to, then commit changes. These are generally to src/ontology/go-edit.obo. In some cases you may also need to change taxon constraint files.
-
-If you did not modify a file yourself, don't commit it. There may be modifications in files like this CLAUDE.md, this is expected, don't commit them.
-
-## Gene Ontology Guidelines
-
-## `namespace` tags
-
-Unlike other obo ontologies, there is always a `namespace:` tag in GO.
-
-## Obsoleting terms
-
-obsolete terms should have no logical axioms (is_a, relationship,
-intersection_of) on them. Obsolete terms may be replaced by a single
-term (so-called obsoletion with exact replacement), or by zero to many `consider` tags.
-
-Synonyms and xrefs can be migrated judiciously,
-
-We never do complete merges now, so there should be no `alt_ids` or
-disappearing stanzas. If a user asks for a merge, they usually mean
-obsoletion with direct replacement, as here:
-
-```
-[Term]
-id: GO:0000170
-name: obsolete sphingosine hydroxylase activity
-namespace: molecular_function
-def: "OBSOLETE. Catalysis of the hydroxylation of sphingolipid long chain bases." [PMID:9556590]
-comment: The reason for obsoletion is that this term is equivalent to sphingolipid C4-monooxygenase activity.
-property_value: term_tracker_item "https://github.com/geneontology/go-ontology/issues/29717" xsd:anyURI
-is_obsolete: true
-replaced_by: GO:0102772
-```
-
-Note the pattern for names and definitions.
-
-No relationship should point to an obsolete term - when you obsolete a term, you may need to also rewire
-terms to "skip" the obsoleted term.
-
-## Other metadata
-
-- Link back to the issue you are dealing with using the `term_tracker_item`
-- All terms should have definitions, with at least one definition xref, ideally a PMID
-- You can sign terms as `created_by: dragon-ai-agent`
-
-## Relationships
-
 All terms should have at least one `is_a` (this can be implicit by a logical definition, see below).
 It's common for BP and CC terms to have a `part_of` relationship.
 
-## Taxon Constraints
-
-These live in `src/taxon_constraints`
-
-- `never_in_taxon.tsv`
-- `only_in_taxon.tsv`
-
-When obsoleting a term, you may need to remove the taxon constraint, as these should never point to obsoletes
-
-## Logical definitions
-
-These should follow genus-differentia form, and the text definition should mirror the logical definition. Example:
+Logical definitions should follow genus-differentia form, and the text definition should mirror the logical definition. Example:
 
 ```
 [Term]
@@ -147,32 +95,35 @@ Never guess the pattern or relationships. Consult the design pattern docs or loo
 
 The reasoner can find the most specific `is_a`, so it's OK to leave this off.
 
-## Reaction Terms
+## Special cases
 
-Reaction terms may have mappings that are qualified using skos (using `source` qualifiers), as in the following:
+- term obsoletions, invoke the [term-obsoletion] agent
+    - ensure no references (in ontology or annotations) to obsolete terms; rewire if necessary
+    - ensure migration of axioms
+    - ensure minimal axioms remain in obsolete term
+    - follow metadata conventions
+- anything involving CHEBI/chemical entities, invoke the [chemical-entity-agent]
+    - use ph7.3 forms
+- mappings, invoke the [mapping-agent] agent
+    - always provide the skos predicate on a mapping when you can
+    - always check the mapped term to see if a mapping makes sense
+    - look at mappings holistically
+- for anything involving reactions/catalytic activities/RHEA/EC, invoke the [reaction-agent]
+- for taxon constraints, see the [taxon-constraint-agent]
+    - these are in `src/taxon_constraints` (not the main obo file)
+        - `never_in_taxon.tsv`
+        - `only_in_taxon.tsv`
 
-```
-[Term]
-id: GO:0000140
-name: acylglycerone-phosphate reductase (NADP+) activity
-namespace: molecular_function
-def: "Catalysis of the reaction: 1-hexadecanoyl-sn-glycero-3-phosphate + NADP+ = 1-hexadecanoylglycerone 3-phosphate + H+ + NADPH." [RHEA:17341]
-synonym: "1-acyldihydroxyacetone-phosphate reductase activity" EXACT []
-synonym: "1-palmitoylglycerol-3-phosphate:NADP+ oxidoreductase activity" RELATED [EC:1.1.1.101]
-synonym: "acyldihydroxyacetone phosphate reductase activity" RELATED [EC:1.1.1.101]
-synonym: "palmitoyl dihydroxyacetone phosphate reductase activity" RELATED [EC:1.1.1.101]
-synonym: "palmitoyl-dihydroxyacetone-phosphate reductase activity" RELATED [EC:1.1.1.101]
-synonym: "palmitoyldihydroxyacetone-phosphate reductase activity" RELATED [EC:1.1.1.101]
-xref: EC:1.1.1.101 {source="skos:exactMatch"}
-xref: MetaCyc:ACYLGLYCERONE-PHOSPHATE-REDUCTASE-RXN {source="skos:exactMatch"}
-xref: MetaCyc:RXN-15046 {source="skos:narrowMatch"}
-xref: RHEA:17341 {source="skos:exactMatch"}
-xref: RHEA:36175 {source="skos:narrowMatch"}
-is_a: GO:0016616 ! oxidoreductase activity, acting on the CH-OH group of donors, NAD or NADP as acceptor
-property_value: term_tracker_item "https://github.com/geneontology/go-ontology/issues/28070" xsd:anyURI
-property_value: term_tracker_item "https://github.com/geneontology/go-ontology/issues/28526" xsd:anyURI
-```
+## ALWAYS perform validation [ontology-validation agent]
 
-Ideally there is a single source of truth for a reaction terms, which should be specified in the def xref
+Ensure that full validation is performed, using `cd src/ontology && make travis_test`. see ontology-validation agent for details.
+
+## Reporting back information
+
+If you are addressing a specific github issue, create fresh ISSUE_COMMENTS.md and PR_COMMENTS.md files.
+
+If you are instructed to, then commit changes. These are generally to src/ontology/go-edit.obo. In some cases you may also need to change taxon constraint files.
+
+If you did not modify a file yourself, don't commit it. There may be modifications in files like this CLAUDE.md, this is expected, don't commit them.
 
 

@@ -20,9 +20,9 @@ Create a plan for addressing the issue. The plan MUST have the following compone
 - [ ] initial ISSUE_COMMENTS.md written; high level summary of changes, and any requests for further info
 - [ ] Necessary background research performed [research-agent]
 - [ ] Relevant ontology terms (this ontology or others) have been consulted [ontology-term-search]
-- [ ] Existing terms and documentation consulted [compliance-agent]
+- [ ] Existing terms and documentation consulted 
 - [ ] The changes made are in accordance with the issue request and forms a coherent unit of work [ontology-editing]
-- [ ] The changes made are conformant with the best practice for this ontology  [compliance-agent]
+- [ ] The changes made are conformant with the best practice for this ontology 
 - [ ] All references (eg PMIDs) introduced have been validated, and are relevant, and not typos or hallucinations [research-agent]
 - [ ] The metadata for the changes is correct  [metadata-checker]
 - [ ] The changes made are biologically correct and accurate [research-agent]

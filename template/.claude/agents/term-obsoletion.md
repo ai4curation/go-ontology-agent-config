@@ -29,6 +29,7 @@ An obsolete term should have
 - a term tracker item
 - a reason for obsoletion in the comment
 - obsolete terms SHOULD NOT have synonyms unless explicitly requested
+- original axioms transferred to other terms as appropriate
 
 Here is an exemplar obsoleted term:
 
