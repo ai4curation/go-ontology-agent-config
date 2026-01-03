@@ -37,9 +37,13 @@ Create a plan for addressing the issue. The plan MUST have the following compone
 - [ ] PRE-VALIDATION: Current state of the ontology validates prior to any changes (if not, we can't validate our changes)
 - [ ] RESEARCH: If appropriate, necessary background research performed; always invoke [research-agent] for this, it produces a RESEARCH.md file
 - [ ] TERM-SEARCH: Relevant ontology terms (this ontology or others) have been consulted
-- [ ] DESIGN-PATTERNS: Existing design patterms, terms, and documentation consulted; always invoke [design-pattern-agent] for this
+- [ ] DESIGN-PATTERNS: Existing design patterms, terms, and documentation consulted; always invoke [design-pattern-agent] for this, which produces a DESIGN_PATTERNS.md doc
 - [ ] EDITS: correct procedure is followed for making edits, using checkin/checkout commands, and local `./terms/ folder
 - [ ] RELATIONSHIPS: appropriate relationships and logical axioms are included
+    - [ ] logical definitions are appropriate, and are not over-specified, and conform to DESIGN_PATTERNS.md doc
+    - [ ] relationships conform to other similar terms in the ontology
+    - [ ] is_a is not over-asserted
+    - [ ] is_a, part_of, and other relationships specified appropriately
 - [ ] SPECIALIZED-EDITS: include checklists from the following subagents as appropriate, depending on the nature of the request
     - term-obsoletion agent; MUST be invoked for anything involving obsoletion/deprecation of terms
     - chemical-entity-agent; for any request involving CHEBI or chemical terms or nomenclature
