@@ -68,16 +68,28 @@ You can do searches for literature using web search tools. For focused deep rese
 
 Use PMIDs where possible, and ALWAYS check that these PMIDs are the correct ones, and not typos or hallucinated.
 
-## Querying ontology [see also: ontology-term-search agent]
+## Search and lookup of GO terms
 
-You can search over `src/ontology/go-edit.obo` using `obo-grep.pl` (in your path)
+The recommended way to find terms in `src/ontology/go-edit.obo` is using `obo-grep.pl`
 
 - To look at a specific term if you know the ID:
     - `obo-grep.pl --noheader -r 'id: GO:0004177' src/ontology/go-edit.obo`
 - All mentions of an ID
     - `obo-grep.pl --noheader -r 'GO:0004177' src/ontology/go-edit.obo`
+- Regexes; all mentions of hand (in any part of the stanza)
+    - `obo-grep.pl --noheader -r 'hand' src/ontology/go-edit.obo`
 - Regexes; all mentions of hand or foot:
     - `obo-grep.pl --noheader -r '(hand|foot)' src/ontology/go-edit.obo`
+- Regexes; all mentions of hand or foot in the definition line:
+    - `obo-grep.pl --noheader -r 'def: ".*(hand|foot)' src/ontology/go-edit.obo`
+- Note that `obo-grep.pl` is in your PATH, no need to search for it    
+- Only search over `src/ontology/go-edit.obo`
+
+Troubleshooting: if you can't find `go-edit.obo` it likely means you have changed folder, navigate back up to where the repo is checked out
+
+## Searching terms in other ontologies
+
+See [external-term-lookup] agent if you need to find non-GO terms.
 
 ## Making edits [see also: ontology-editing agent]
 
