@@ -25,7 +25,7 @@ The project follows standard ODK layout:
 These instructions are optimized for claude code. Subagents are used, and defined
 in `.claude/agents/`
 
-## Analyze Issue and Plan Approach
+## Analyze Issue, Plan Approach, and create a TODO/checklist
 
 Read the entire issue and all associated comments. Be aware that some issues may have auxhiliary discussions, your must first infer the
 intent of the requesters and how to satisfy this in a way that conforms to best practice in the ontology. If the user intent from the
@@ -33,10 +33,9 @@ issue is hopelessly ambiguous, then write a note asking for clarification in a n
 
 Create a plan for addressing the issue. The plan MUST have the following components (you can have more components depending on the nature of the issue)
 
-- [ ] Current state of the ontology validates prior to any changes [ontology-validation]
-- [ ] Analyzed intent of the issue [this agent]
-- [ ] initial ISSUE_COMMENTS.md written; high level summary of changes, and any requests for further info
-- [ ] Necessary background research performed [research-agent]
+- [ ] Current state of the ontology validates prior to any changes (if not, we can't validate our changes)
+- [ ] The issue and all its context has been analyzed, the intent is clear, and a plan for addressing it has been created
+- [ ] If appropriate, necessary background research performed, using [research-agent]
 - [ ] Relevant ontology terms (this ontology or others) have been consulted [ontology-term-search]
 - [ ] Existing terms and documentation consulted 
 - [ ] The changes made are in accordance with the issue request and forms a coherent unit of work [ontology-editing]
@@ -45,7 +44,8 @@ Create a plan for addressing the issue. The plan MUST have the following compone
 - [ ] The metadata for the changes is correct  [metadata-checker]
 - [ ] The changes made are biologically correct and accurate [research-agent]
 - [ ] The ontology obo file has been syntax checked normalized after any edits [ontology-editing]
-- [ ] The ontology validates correctly after changes have been made  [ontology-validation]
+- [ ] The ontology validates correctly using `make travis_test` after changes have been made
+- [ ] ISSUE_COMMENTS.md written; high level summary of changes, and any requests for further info
 - [ ] PR_COMMENTS.md written (if changes made); detailed description of changes made, and rationale. Include checklists. [this agent]
 
 You MUST use the subagent defined in square brackets above for each of these.
