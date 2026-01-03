@@ -37,9 +37,13 @@ Create a plan for addressing the issue. The plan MUST have the following compone
 - [ ] PRE-VALIDATION: Current state of the ontology validates prior to any changes (if not, we can't validate our changes)
 - [ ] RESEARCH: If appropriate, necessary background research performed; always invoke [research-agent] for this, it produces a RESEARCH.md file
 - [ ] TERM-SEARCH: Relevant ontology terms (this ontology or others) have been consulted
-- [ ] DESIGN-PATTERNS: Existing design patterms, terms, and documentation consulted; always invoke [design-pattern-agent] for this
+- [ ] DESIGN-PATTERNS: Existing design patterms, terms, and documentation consulted; always invoke [design-pattern-agent] for this, which produces a DESIGN_PATTERNS.md doc
 - [ ] EDITS: correct procedure is followed for making edits, using checkin/checkout commands, and local `./terms/ folder
 - [ ] RELATIONSHIPS: appropriate relationships and logical axioms are included
+    - [ ] logical definitions are appropriate, and are not over-specified, and conform to DESIGN_PATTERNS.md doc
+    - [ ] relationships conform to other similar terms in the ontology
+    - [ ] is_a is not over-asserted
+    - [ ] is_a, part_of, and other relationships specified appropriately
 - [ ] SPECIALIZED-EDITS: include checklists from the following subagents as appropriate, depending on the nature of the request
     - term-obsoletion agent; MUST be invoked for anything involving obsoletion/deprecation of terms
     - chemical-entity-agent; for any request involving CHEBI or chemical terms or nomenclature
@@ -160,10 +164,24 @@ Tip: It's always a good idea to look at the structure of existing similar terms,
 ## RELATIONSHIPS: logical axioms and conforming to design patterns
 
 All terms should have at least one `is_a` (this can be implicit by a logical definition, see below).
-It's common for BP and CC terms to have a `part_of` relationship.
+It's common for BP and CC terms to have a `part_of` relationship. `regulates` relations are used for regulation terms.
+In the edit file, all relationship types are specified using the "short form" and not the RO/BFO ID.
 
-Logical definitions should be included if the term is compositional in nature, and there is a design pattern. Logical definitions
- should follow genus-differentia form, and the text definition should mirror the logical definition. Example:
+Logical definitions should be included if the term is compositional in nature, and there is a design pattern. Logical definitions should follow genus-differentia form, and the text definition should mirror the logical definition. 
+ 
+ Here "logical definitions" means necessary AND SUFFICIENT conditions, expressed in obo format using `intersection_of` tags, which map to OWL equivalence axioms. E.g.
+
+ ```obo
+ id: T
+ intersection_of: G ! <genus term>
+ intersection_of: R D ! <differentia>
+ ```
+ <=>
+ ```owl
+ R EquivalentTo (G and R some D)
+ ```
+
+ Example:
 
 ```
 [Term]
@@ -179,12 +197,59 @@ relationship: part_of GO:0001503 ! ossification
 
 Here the genus is `cell differentiation` and the differentia points to a CL term. Never guess these IDs, use tools to find them.
 Never guess the pattern or relationships. Consult the design pattern docs or look for similar terms (e.g. other differentiation terms).
+These are necessary and sufficient conditions, so if there is another term for differentiation of a more specific kind of osteoblast, it will be classified here.
 
-The reasoner can find the most specific `is_a`, so it's OK to leave this off.
+The reasoner can find the most specific `is_a`, so it's OK to leave this off. The edit file is in "pre-reasoned" state. Similarly, it's generally an anti-pattern to have more than one asserted `is_a`.
 
 Always make sure that design patterns are conformed to, especially for compositional terms. Use the [design-pattern] agent to check for conformance of name, def and logical def.
 
 But also use prior art: look for similar terms with `obo-grep.pl`
+
+IMPORTANT: logical definitions should map to the text definition and label, and should specify BOTH necessary AND SUFFICIENT conditions.
+It may be tempting to use the `intersection_of` construct for expressing links to external ontology terms, but it's fine to simply use `relationship` tags!
+
+A common anti-pattern is using logical definitions where relationships suffice. This is over-specification. For example:
+
+```
+!! Example of an INCORRECT axiomatization
+name: keratinization
+def: "The process in which the cytoplasm of the outermost cells of the vertebrate epidermis is replaced by keratin. Keratinization occurs in the stratum corneum, feathers, hair, claws, nails, hooves, and horns." [GOC:dph, GOC:ebc, GOC:sdb_2009, GOC:tb]
+intersection_of: GO:0032501 ! multicellular organismal process ### WRONG
+intersection_of: occurs_in CL:0000362 ! epidermal cell         ### WRONG
+```
+
+The above is completely wrong. The formal reason that there are OTHER kinds of multicellular organismal processes that occur in epidermal cells that are NOT keratinizations. It might help to think of this in OWL terms, as saying kerarinization is the same as the intersection of MOPs that occurs_in some epidermal cell. Other red flags are:
+
+1. This does not correspond to a design pattern
+2. The label does to map to the logical definition (a label for this logical definition would be something like "epidermal multicellular process")
+3. The text definition does not map to the logical definition (a text def for this logical definition would be something like "Any MOP that occurs in an epidermal cell")
+
+In this case it is perfectly fine to have weaker axiomatization:
+
+```
+!! Example of an CORRECT weaker axiomatization
+name: keratinization
+def: "The process in which the cytoplasm of the outermost cells of the vertebrate epidermis is replaced by keratin. Keratinization occurs in the stratum corneum, feathers, hair, claws, nails, hooves, and horns." [GOC:dph, GOC:ebc, GOC:sdb_2009, GOC:tb]
+is_a: GO:0032501 ! multicellular organismal process ### CORRECT
+relationship: occurs_in CL:0000362 ! epidermal cell ### CORRECT
+```
+
+An example of when stronger axiomatization is warranted:
+
+```
+id: GO:0032042
+name: mitochondrial DNA metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving mitochondrial DNA." [GOC:mah]
+synonym: "mitochondrial DNA metabolism" EXACT []
+synonym: "mtDNA metabolic process" EXACT []
+synonym: "mtDNA metabolism" EXACT []
+intersection_of: GO:0006259 ! DNA metabolic process
+intersection_of: occurs_in GO:0005739 ! mitochondrion
+```
+
+Here the DP, label (and synonyms), text def, logical def all align, and the OWL axiomatization is trivially true.
+ 
 
 ## METADATA
 
