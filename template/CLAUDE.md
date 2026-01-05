@@ -50,7 +50,7 @@ Create a plan for addressing the issue. The plan MUST have the following compone
     - reaction-agent; for any request involving RHEA, EC, or the cataltic activity branch of GO
     - taxon-constraint-agent; for any request involving restricting usage of a term or branch to a taxon/clade
 - [ ] METADATA: The metadata for the changes is correct
-- [ ] AUTOMATED-VALIDATION: The ontology validates correctly using `make travis_test` after changes have been made
+- [ ] AUTOMATED-VALIDATION: The ontology validates correctly using `make travis_build` after changes have been made
 - [ ] REFERENCE-VALIDATION: All references (eg PMIDs) introduced have been validated, and are relevant, and not typos or hallucinations; always invoke [research-agent] for this
 - [ ] CHANGES-COMMITTED
     - [ ] RELEVANT-FILES: changes to src/ontology/go-edit.obo and any other content file are committed with detailed messages and signatures
@@ -136,7 +136,7 @@ The general procedure is:
 - checking in will update the edit file and remove the file from `terms/`
 - Commits are then made on src/ontology/go-edit.obo as appropriate
 - Note that `obo-checkout.pl` and `obo-checkin.pl` are in your PATH, no need to search for it    
-- Always validate after checkin via `cd src/ontology && make travis_test`
+- Always validate after checkin via `cd src/ontology && make travis_build`
 
 ### Creation of new terms
 
@@ -361,9 +361,9 @@ property_value: term_tracker_item "https://github.com/geneontology/go-ontology/i
 
 ## AUTOMATED-VALIDATION using Makefile
 
-Ensure that full validation is performed, using `cd src/ontology && make travis_test` (being sure you are in the right folder)
+Ensure that full validation is performed, using `cd src/ontology && make travis_build` (being sure you are in the right folder)
 
-Allow ~5 mins for travis_test to run
+Allow ~5 mins for travis_build to run
 
 This ontology uses standard ODK/ROBOT tests plus custom tests to ensure the ontology is logically, syntactically, and stylistically valid.
 
@@ -372,7 +372,7 @@ This ontology uses standard ODK/ROBOT tests plus custom tests to ensure the onto
 The standard command to run to validate is:
 
 ```
-cd src/ontology && make travis_test
+cd src/ontology && make travis_build
 ```
 
 Like all ODK tests, these are run in the same file as the ontology source. This wraps robot `reason` and other robot QC checks.
