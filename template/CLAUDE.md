@@ -376,7 +376,7 @@ cd src/ontology && robot verify -i go-edit.obo --queries ../sparql/equivalent-cl
 Reasoning:
 
 ```
-cd src/ontology && robot reason -r ELK -i go-edit.obo
+cd src/ontology && robot reason -r ELK -i go-edit.obo -o go-edit.reasoned.obo
 ```
 
 
