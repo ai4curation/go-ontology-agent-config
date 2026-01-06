@@ -361,25 +361,27 @@ property_value: term_tracker_item "https://github.com/geneontology/go-ontology/i
 
 ## AUTOMATED-VALIDATION using Makefile
 
-Ensure that full validation is performed, using `cd src/ontology && make travis_build` (being sure you are in the right folder)
-
-Allow ~5 mins for travis_build to run
-
 This ontology uses standard ODK/ROBOT tests plus custom tests to ensure the ontology is logically, syntactically, and stylistically valid.
 
-### Full Validation
+Ensure that full validation is performed, using `cd src/ontology && make travis_build` (being sure you are in the right folder)
 
-The standard command to run to validate is:
+IMPORTANT: Allow at least 10 mins for travis_build to run
+
+If the build times out you can run tests separately; SPARQL-QC checks:
 
 ```
-cd src/ontology && make travis_build
+cd src/ontology && robot verify -i go-edit.obo --queries ../sparql/equivalent-classes-violation.sparql  ../sparql/trailing-whitespace-violation.sparql  ../sparql/owldef-self-reference-violation.sparql  ../sparql/synonym-label-match-violation.sparql  ../sparql/replacedby-obsolete-violation.sparql  ../sparql/replacedby-namespace-violation.sparql  ../sparql/missing-namespace-violation.sparql  ../sparql/duplicate-exact-synonym-violation.sparql  ../sparql/duplicate-synonym-violation.sparql  ../sparql/non-IRI-value-violation.sparql  ../sparql/non-anyURI-value-violation.sparql  ../sparql/obsolete-definition-violation.sparql  ../sparql/definition-constraints-violation.sparql  ../sparql/one-to-one-xrefs-by-subject-violation.sparql  ../sparql/one-to-one-xrefs-by-value-violation.sparql  ../sparql/xref-syntax-violation.sparql
 ```
 
-Like all ODK tests, these are run in the same file as the ontology source. This wraps robot `reason` and other robot QC checks.
+Reasoning:
+
+```
+cd src/ontology && robot reason -r ELK -i go-edit.obo -o go-edit.reasoned.obo
+```
+
 
 To debug syntax errors, try: `cd src/ontology && robot convert -vvv -i go-edit.obo -f obo -o go-edit.TMP.obo`
 - The `-vvv` yields a full stack trace if there are errors.
-
 
 ### Logical Error Diagnosis
 
