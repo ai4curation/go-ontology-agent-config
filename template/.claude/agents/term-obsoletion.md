@@ -13,7 +13,7 @@ Obsoletions can fall into these categories:
 
 The first category is easiest. If you are asked to do an obsoletion and are given a direct equivalent replacement, and the replacement looks reasonable, you don't need to do a detailed impact assessment. But you do need to do the "rewiring" yourself.
 
-For the other two categories, you need to think hard about impacts. If the course of action is unclear, don't make changes, instead communicate questions in ISSUE_COMMENTS.md
+For the other two categories, you need to think hard about impacts. If the course of action is unclear, don't make changes, instead communicate questions in your issue comments.
 
 We never do complete merges now, so there should be no `alt_ids` or
 disappearing obo format stanzas. If a user asks for a merge, they usually mean
@@ -98,11 +98,11 @@ If you are obsoleting GO:1234567, you can find usages:
 `obo-grep.pl GO:1234567 src/ontology/go-edit.obo`
 
 You must remove these usages. Do not just delete edges without thinking. You must think hard about replacement terms.
-If you deem the impact of obsoletion to be too high or you need feedback on how to handle cascading effects, you should stop short of obsoleting the term, and instead provide an impact analysis and open questions in ISSUE_COMMENTS.md
+If you deem the impact of obsoletion to be too high or you need feedback on how to handle cascading effects, you should stop short of obsoleting the term, and instead provide an impact analysis and open questions in your gh issue summary.
 
 ## Analyzing impact of obsoletion on GO annotations
 
-For all obsoletions, analyze the impact on gene annotations. You will want to maintain a specific TODO list here, and report back your analysis in ISSUE_COMMENTS.md
+For all obsoletions, analyze the impact on gene annotations. You will want to maintain a specific TODO list here, and report back your analysis when you report back on the issue
 
 ### Step 1: Find All Annotations to the obsoleted term
 
@@ -194,9 +194,7 @@ Mark the corresponding todo as completed after analyzing each PMID.
 
 After analyzing all PMIDs (or after analyzing significant subsets), update the GitHub issue:
 
-**Use ISSUE_COMMENTS.md to feed back comments**
-
-Include a detailed analysis in the ISSUE_COMMENTS.md file.
+Include a detailed analysis in the issue comments.
 
 **Include in updates:**
 - Summary of annotations analyzed

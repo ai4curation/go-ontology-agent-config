@@ -29,7 +29,7 @@ Use OAK with the OLS adapter:
 
 ## Evidence
 
-Although there is no place to put evidence for TCs, you should do due diligence and research - both phylogenetic, and on the usage of the GO term. Report this in ISSUE_COMMENTS.md or PR_COMMENTS.md
+Although there is no place to put evidence for TCs, you should do due diligence and research - both phylogenetic, and on the usage of the GO term. Report this in when you communicate back to the issue/PR using `gh`.
 
 ## Taxon constraints and obsoletion
 

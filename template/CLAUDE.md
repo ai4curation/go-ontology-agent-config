@@ -29,7 +29,7 @@ in `.claude/agents/`
 
 Read the entire issue and all associated comments. Be aware that some issues may have auxhiliary discussions, your must first infer the
 intent of the requesters and how to satisfy this in a way that conforms to best practice in the ontology. If the user intent from the
-issue is hopelessly ambiguous, then write a note asking for clarification in a new file ISSUE_COMMENTS.md, and end here.
+issue is hopelessly ambiguous, then write a note asking for clarification in the original issue (using `gh`) and end here.
 
 Create a plan for addressing the issue. The plan MUST have the following components (you can have more components depending on the nature of the issue)
 
@@ -56,20 +56,20 @@ Create a plan for addressing the issue. The plan MUST have the following compone
     - [ ] RELEVANT-FILES: changes to src/ontology/go-edit.obo and any other content file are committed with detailed messages and signatures
     - [ ] ACCURACY: The changes made are biologically correct, accurate, and reasonably complete; always invoke [research-agent] to obtain background material
     - [ ] ISSUE-ALIGNMENT: The changes made are in accordance with the issue request and forms a coherent unit of work;
-    - DO NOT ATTEMPT TO PUSH. This will get taken care of automatically after you are done.
-    - [ ] Create (but don't commit) a ISSUE_COMMENTS.md file; high level summary of changes, and any requests for further info 
-    - [ ] Create (but don't commit) a PR_COMMENTS.md file (if changes made); detailed description of changes made, and rationale. Include checklists. [this agent]
+    - [ ] PR is created or amended
+    - [ ] Communicate high level summary of changes on original issue(s), and any requests for further info 
+    - [ ] Communicated on PR detailed description of changes made, and rationale. Include checklists.
 
-If the user intent is not clear, or you are not confident to make changes, you should stop work, report back to the user, including any questions in ISSUE_COMMENTS.md (do not make a PR_COMMENTS as there are not changes to make a PR from).
+If the user intent is not clear, or you are not confident to make changes, you should stop work, report back to the user, including any questions in the issue.
 
-Otherwise, if you proceed to making and committing changes, then you should ensure you have written BOTH ISSUE_COMMENTS *and* PR_COMMENTS. Include the checklist in PR_COMMENTS.md. Everything should be checked or marked N/A.
+Otherwise, if you proceed to making and committing changes. Include the checklist in the comments you communicate to the PR. Everything should be checked or marked N/A.
 
 ### PRE-VALIDATION: What to do if the ontology is invalid BEFORE you commence work.
 
 In general you should ONLY make changes in scope of the issue. However, if validation fails
 BEFORE you start work, and this requires a minor fix, go ahead and make it.
 
-Otherwise you should not make edits, and end after creating an ISSUE_COMMENTS.md file with
+Otherwise you should not make edits, and end after communicating back on the original issue with
 a detailed description of what is invalid, and a plan for how to fix things.
 
 ## RESEARCH [see also: research-agent]
@@ -395,7 +395,7 @@ To debug syntax errors, try: `cd src/ontology && robot convert -vvv -i go-edit.o
 
 Ensure that any references introduced came from the RESEARCH.md file created by the research-agent.
 
-RESEARCH.md can be included in ISSUE_COMMENTS.md verbatim (but you can exclude references that turned out to be irrelevant)
+RESEARCH.md can be included in your gh issue comments verbatim (but you can exclude references that turned out to be irrelevant)
 
 ## COMMITTING
 
@@ -405,8 +405,6 @@ If you did not modify a file yourself, don't commit it. There may be modificatio
 
 Include detailed comments.
 
-Do not push or attempt to use APIs to talk to the issue repo.
-
 Changes should be:
 
 - Aligned with original request
@@ -414,18 +412,18 @@ Changes should be:
 
 You MUST:
 
-- create a ISSUE_COMMENTS.md file which I will use to feed back comments to the user making the request
+- communicate back to the original requester(s) on the original issue(s)
    - include background material, including RESEARCH.md if relevant
    - include a high level biologist-friendly summary of your changes. Include justifications
-   - Don't include in-the-weed technical details here, these can go in PR_COMMENTS
+   - Don't include in-the-weed technical details here, these can go in the PR details
    - You can include any questions you might have for the original user here
-- create a PR_COMMENTS.md file
+- Communicate detailed changes in the PR
    - include the complete checklist here
    - include any detailed technical details here
    - This is for the attention of the reviewer of the PR, so more details are appropriate here
 
 ### Conversational guidelines
 
-When communicating with the user via ISSUE_COMMENTS.md or with the GO editorial team via PR_COMMENTS.md,
+When communicating with the user via issues and PRs using `gh`:
 be polite, yet direct. Absolutely no sycophancy, and no "Great question!" energy. Keep it professional, concise, and sharp, 
 but a little personality and understated wit are welcome when it fits. No emojis, don't be cringe.
