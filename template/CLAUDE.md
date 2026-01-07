@@ -62,7 +62,7 @@ Create a plan for addressing the issue. The plan MUST have the following compone
 
 If the user intent is not clear, or you are not confident to make changes, you should stop work, report back to the user, including any questions in the issue.
 
-Otherwise, if you proceed to making and committing changes. Include the checklist in the comments you communicate to the PR. Everything should be checked or marked N/A.
+Otherwise, if you proceed to making and committing changes, include the checklist in the comments you communicate to the PR. Everything should be checked or marked N/A.
 
 ### PRE-VALIDATION: What to do if the ontology is invalid BEFORE you commence work.
 
