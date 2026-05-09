@@ -18,4 +18,4 @@ install target-directory=".": (pre_clean target-directory) (install-tools)
     copier copy -f {{ justfile_directory() }}/template {{ target-directory }}
     # Create symlinks for Codex compatibility (reads AGENTS.md and .agents/skills/)
     cd {{target-directory}} && ln -sf CLAUDE.md AGENTS.md
-    cd {{target-directory}} && mkdir -p .agents && [ -d .claude/skills ] && ln -sf ../.claude/skills .agents/skills || true
+    cd {{target-directory}} && mkdir -p .claude && [ -d .agents/skills ] && ln -sf ../.agents/skills .claude/skills || true
